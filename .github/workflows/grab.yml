@@ -1,0 +1,29 @@
+name: oci-arm-grab
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+      OCI_USER: ${{ secrets.OCI_USER }}
+      OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+      OCI_KEY: ${{ secrets.OCI_KEY }}
+      OCI_REGION: us-chicago-1
+      OCI_SUBNET: ocid1.subnet.oc1.us-chicago-1.aaaaaaaau2wu4fvidvcegorpp65owy3nasek5onbmvabf2x6q4yjvbcfqg5a
+      OCI_IMAGE: ocid1.image.oc1.us-chicago-1.aaaaaaaadcv3pphkgnnwsulixcq3glryb4ljkgxnijfocsxarbg6fnru5sjq
+      OCI_SSH_PUB: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMo5bS4KDZdkWe3g1T5/l+HUavxJXRO1LuOIe57vuR46IJ/gNKcsAiXvOCNxSdMH1dUtNhxO9pAwrchYL19iXjYnIR6YKhb4tikUB6TeummSCuoKv95bot+bEBigx69eSEM+bMQfWLSpPEejO+hf32sRwioTmilRXqNeBmonxy0tBjrMRH+LtdtCf33P1XyacHkF+yzZBXsw2i5N2dWjdR1sIcVL1Xcl/eWUTG2JM1aEosFxBW2prg25A8vip1+2Yn8r7GVu3bYw/kvRaQxjtQevyhDgjN1vzM/noSBJbbO5vEJtsKKp0oUN9JUheTfyCRlonJhw8aRG3E9tUwkiNn
+      AD: dKOd:US-CHICAGO-1-AD-1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OCI CLI
+        run: python3 -m pip install --quiet oci-cli
+      - name: Try to launch ARM instance
+        run: python3 attempt_launch.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
