@@ -37,7 +37,7 @@ def main():
         f.write("region=%s\n" % cfg["region"])
         f.write("key_file=%s\n" % key_path)
 
-    config = oci.config.from_file(config_file_location=config_path)
+    config = oci.config.from_file()
     client = oci.core.ComputeClient(config)
 
     details = oci.core.models.LaunchInstanceDetails(
